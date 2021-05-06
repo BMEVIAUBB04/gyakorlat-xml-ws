@@ -80,7 +80,7 @@ A JAX-WS API a Java 6-ban "leszivárgott" a Java SE-be is, így lehetségessé v
         	endpoint.publish("/currency");
         	return endpoint;
     	}
-}
+    }
     ```
     
 1. Figyeljünk oda az importoknál: 
@@ -168,7 +168,7 @@ A JAX-WS API a Java 6-ban "leszivárgott" a Java SE-be is, így lehetségessé v
 
 ## Feladat 5: SOAP forgalom monitorozása
 
-1. Töltsd le és futtasd az alábbi egyszerű eszközt: [tcpTrace](tools/tcpTrace.zip)! Ez egy adott porton figyel, és az oda érkező kéréseket továbbítja egy tetszőleges szerver tetszőleges portjára, miközben megjeleníti a TCP socketen utazó adatokat, mindkét irányban.
+1. Töltsd le és futtasd az alábbi egyszerű eszközt: [tcpTrace](raw/master/tools/tcpTrace.zip)! Ez egy adott porton figyel, és az oda érkező kéréseket továbbítja egy tetszőleges szerver tetszőleges portjára, miközben megjeleníti a TCP socketen utazó adatokat, mindkét irányban.
 
 2. Add meg, hogy melyik porton figyeljen (pl. 9080), és hova továbbítsa a beérkező kéréseket: Destination Server: localhost, Destination port: 8080
 
