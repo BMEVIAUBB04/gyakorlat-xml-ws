@@ -166,7 +166,7 @@ A JAX-WS API a Java 6-ban "leszivárgott" a Java SE-be is, így lehetségessé v
 
 
 
-## Feladat 5: SOAP forgalom monitorozása
+## Feladat 6: SOAP forgalom monitorozása
 
 1. Töltsd le és futtasd az alábbi egyszerű eszközt: [tcpTrace](https://github.com/BMEVIAUBB04/gyakorlat-xml-ws/raw/master/tools/tcpTrace.zip)! Ez egy adott porton figyel, és az oda érkező kéréseket továbbítja egy tetszőleges szerver tetszőleges portjára, miközben megjeleníti a TCP socketen utazó adatokat, mindkét irányban.
 
@@ -183,7 +183,7 @@ A JAX-WS API a Java 6-ban "leszivárgott" a Java SE-be is, így lehetségessé v
 
 
 
-## Feladat 6: Repülőjárat kereső szolgáltatás fejlesztése, meghívása és monitorozása (önálló)
+## Feladat 7: Repülőjárat kereső szolgáltatás fejlesztése, meghívása és monitorozása (önálló)
 
 1. Fejlessz egy XML webszolgáltatást, amellyel repülőjáratokat lehet keresni indulási és érkezési hely alapján. Egy járatról tudjuk, hogy honnan hova repül, mi az indulási és érkezési időpontja, és hogy mekkora a jegy ára, egy adott pénznemben.
 2. A szolgáltatást a valutaváltó projektjében valósítsd meg, de külön végpontként! A repülőjáratokat elegendő a memóriában tárolni, a valutaátváltóhoz hasonlóan. Vegyél fel egy olyan járatot, amelynek indulási helye a te Neptun-kódod és az ár pénzneme EUR!
