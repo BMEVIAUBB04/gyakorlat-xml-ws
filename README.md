@@ -12,7 +12,7 @@ A gyakorlat célja, hogy a hallgatók megismerjék az XML webszolgáltatások al
 
 A labor elvégzéséhez szükséges eszközök:
 
-- Legalább 11-es JDK, pl. OpenJDK: https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=hotspot
+- Legalább 17-es JDK
 - Tetszőleges Java alapú, Mavennel integrálódó IDE. A gyakorlatokhoz kapcsolódó videón a Spring Tools 4 for Eclipse-et használjuk: https://spring.io/tools
 
 ## Elméleti alapok
@@ -23,7 +23,7 @@ Manapság sok helyen JSON alapú RESTful webszolgáltatások, vagy más kommunik
 
 A Java Enterprise Edition kezdetben a JAX-RPC API-t vezette be az XML webszolgáltatások magas szintű támogatására. Ennek 2.0-s verziója már a JAX-WS (Java API for XML Web Services) nevet kapta, és a mai napig ez a standard API Java világban az XML webszolgáltatásokhoz. Mint minden Java EE API, ez is csak interfészeket, annotációkat definiál, és több implementációja létezik. Mi ezek közül az Apache CXF-et fogjuk használni. Érdekesség, hogy a CXF a JAX-RS API-t is megvalósítja, amivel (akár JSON alapú) RESTful webszolgáltatásokat tudunk fejleszteni. A CXF-et Spring Boot környezetben fogjuk használni, a szolgáltatás publikálása így spring-specifikus configuration osztály megírását fogja igényelni. Java EE alkalmazásszerver használata esetén a JAX-WS annotációkkal megjelölt osztályokat automatikusan felismeri a szerver, így ott még kevesebb kódra lenne szükség. 
 
-A JAX-WS API a Java 6-ban "leszivárgott" a Java SE-be is, így lehetségessé vált akár Java SE alkalmazásból futtatni vagy meghívni egy webszolgáltatást. A Java 11-ben ezt már kivették, innentől kezdve külön függőségként kell behúzni.
+A JAX-WS API a Java SE-ben is használható, de külön függőségként kell felvenni.
 
 ## Feladat 1: Eclipse indítása
 1. Indítsuk el az Eclipse-et innen: `C:\Work\javaee\eclipse\eclipse.exe`. (Fontos, hogy lehet egy `D:\eclipse` mappa is, nekünk _nem_ az kell.) Otthoni megoldás esetén természetesen a saját IDE-t indítsd el.
@@ -33,7 +33,7 @@ A JAX-WS API a Java 6-ban "leszivárgott" a Java SE-be is, így lehetségessé v
 ## Feladat 2: Projekt létrehozása
 
 1. File > New > Spring Starter Project
-2. A varázslóban adjunk nevet a projektnek (pl. wslab), töltsük ki a group, artifact és package mezőket (pl. hu.bme.aut.hatter, wslab, hu.bme.aut.hatter.wslab). A Type legyen Maven, a Java Version 11.
+2. A varázslóban adjunk nevet a projektnek (pl. wslab), töltsük ki a group, artifact és package mezőket (pl. hu.bme.aut.hatter, wslab, hu.bme.aut.hatter.wslab). A Type legyen Maven, a Java Version 17.
 3. Next után a függőségek közt válasszuk ki a Spring Web-et
 
 
@@ -52,11 +52,11 @@ A JAX-WS API a Java 6-ban "leszivárgott" a Java SE-be is, így lehetségessé v
 1. Vegyük fel a pom-ba az alábbi függőséget!
 
     ```xml
-    <dependency>
-      <groupId>org.apache.cxf</groupId>
-      <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
-      <version>3.4.3</version>
-    </dependency>
+	<dependency>
+		<groupId>org.apache.cxf</groupId>
+		<artifactId>cxf-spring-boot-starter-jaxws</artifactId>
+		<version>4.1.1</version>
+	</dependency>
     ```
 
 1. Emeljük ki egy interfészbe a CurrencyService getRate metódusát! (Refactor > Extract Interface...). Legyen a neve pl. ICurrencyService!
@@ -85,8 +85,10 @@ A JAX-WS API a Java 6-ban "leszivárgott" a Java SE-be is, így lehetségessé v
     
 1. Figyeljünk oda az importoknál: 
 
-    - Endpoint a javax.xml.ws package-ből
+    - Endpoint a jakarta.xml.ws package-ből
     - EndpointImpl a org.apache.cxf.jaxws package-ből
+
+1. A `CurrencyService` osztályra tegyünk egy `@Service` annotációt.
 
 1. Futtassuk az alkalmazást: Debug as > Spring Boot App
 
@@ -105,12 +107,24 @@ A JAX-WS API a Java 6-ban "leszivárgott" a Java SE-be is, így lehetségessé v
    - Create a simple project
    - group id, artifactid pl. hu.bme.aut.hatter, wslab-client
    
-1. Az új projekt pom-jában állítsuk be, hogy Java 11-et akarunk használni:
+1. Az új projekt pom-jában állítsuk be, hogy Java 17-et akarunk használni:
     ```xml
     <properties>
-    	<maven.compiler.target>11</maven.compiler.target>
-    	<maven.compiler.source>11</maven.compiler.source>
+    	<maven.compiler.target>17</maven.compiler.target>
+    	<maven.compiler.source>17</maven.compiler.source>
     </properties>
+    ```
+
+1. Vegyük fel a pom-ba a JAX-WS-t:
+
+    ```xml
+    <dependencies>
+		<dependency>
+			<groupId>com.sun.xml.ws</groupId>
+			<artifactId>rt</artifactId>
+			<version>2.3.3</version>
+		</dependency>
+    </dependencies>
     ```
     
 1. Vegyük fel a pom-ba a jaxws-maven-plugint, amellyel kliens oldali kódot generálunk a webszolgáltatás meghívásához:
@@ -144,17 +158,6 @@ A JAX-WS API a Java 6-ban "leszivárgott" a Java SE-be is, így lehetségessé v
 
 1. A generált kód a target\generated-sources\wsimport mappában fog megjelenni. Ha ez nem jelenik meg by default Java package-ként, akkor vegyük fel Source Folderként. (Jobb klikk a mappán > Build Path > Use as Source Folder)
 
-1. A generált kódban fordítási hibákat fogunk látni, ennek az az oka, hogy a Java 11-ből kivették a JAX-WS API-t, a JDK méretének csökkentése érdekében. Ez az alábbi függőség felvételével orvosolható a pom-ban:
-
-    ```xml
-    <dependencies>
-		<dependency>
-			<groupId>com.sun.xml.ws</groupId>
-			<artifactId>rt</artifactId>
-			<version>2.3.3</version>
-		</dependency>
-    </dependencies>
-    ```
 1. Tekintsük át a generált kódot!
 2. Hozzunk létre egy Main osztályt, main metódussal, amelyben meghívjuk a szolgáltatást!
     ```java
